@@ -1,0 +1,25 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+
+
+# Sensitive files
+*.tfvars
+
+
+
+
+# Plan files
+
+tfplan
+
+# Lock files (optional, if you don’t want to pin provider versions)
+.terraform.lock.hcl
+
+
+
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Your Cloud Favorite</title>
+    <!-- CSS works both when served by Flask (local) and when uploaded to S3 (you'll keep same file layout) -->
+    <link rel="stylesheet" href="style.css">
+    
+    
+    
+    
+    <!-- this is the main file 
+     -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
+
+
+
+
+    </head>
+<body>
+    <div class="container">
+        <h1>Vote Your Cloud Favorite</h1>
+        
+        <!-- Keep original server form POST behavior (unchanged) -->
+        <form method="POST" action="http://tf-2tier-alb-347576377.ap-south-1.elb.amazonaws.com">
+            <label for="option">Choose a Cloud Provider:</label>
+            <select name="option" id="option" required>
+                <option value="">Select...</option>
+                <option value="AWS">AWS</option>
+                <option value="Azure">Azure</option>
+                <option value="Google Cloud">Google Cloud</option>
+                <option value="DigitalOcean">DigitalOcean</option>
+            </select>
+            <button type="submit">Submit Vote</button>
+        </form>
+
+        <div class="results-section">
+            <h2>Results</h2>
+            <div id="results">loading...</div>
+        </div>
+    </div>
+
+<!-- Minimal JS: load results from /api/results on page load.
+     This does NOT replace your form submission behavior — it only fetches current counts and displays them.
+     When you later host this file on S3, replace the empty API_URL string below with "https://your-alb-dns"
+     so the static page can reach the backend API on EC2 (example: const API_URL = "https://voting-alb-....elb.amazonaws.com")
+-->
+<script>
+  // Leave empty for local testing (will call relative /api/results).
+  // When uploaded to S3, set API_URL to your ALB DNS (including protocol).
+  const API_URL = "2tier-alb-1508812337.ap-south-1.elb.amazonaws.com"; // e.g. "https://your-alb-dns"
+
+  async function loadResults() {
+    try {
+      const url = (API_URL || "") + "/api/results"; // if API_URL empty -> "/api/results" (local)
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('Network response not ok');
+      const data = await r.json();
+      // Display results as simple text (you can style later)
+      document.getElementById('results').textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+      console.error('Failed to load results:', err);
+      document.getElementById('results').textContent = "Unable to load results (API may need updating).";
+    }
+  }
+
+  // Load on page open
+  loadResults();
+</script>
+</body>
+</html>

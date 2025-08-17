@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Results</title>
+    <!-- Correct CSS path for Flask static files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Vote Submitted Successfully!</h1>
+        
+        <div class="result-section">
+            <h2>Your Vote: {{ selected_option }}</h2>
+            
+            {% if results %}
+            <h3>Current Results:</h3>
+            <div class="results">
+                {% for candidate, count in results.items() %}
+                <div class="result-item">
+                    <span class="candidate">{{ candidate }}</span>
+                    <span class="votes">{{ count }} votes</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="actions">
+            <a href="/" class="btn">Vote Again</a>
+        </div>
+    </div>
+</body>
+</html>
