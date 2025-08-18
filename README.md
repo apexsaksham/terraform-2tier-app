@@ -45,6 +45,12 @@ User → S3 Website (Frontend) → ALB → EC2 (Backend) → RDS (Postgres)
 
 ---
 
+🔐 Security Groups (Quick Setup, **IMPORTANT**)
+
+**ALB-SG** → Inbound: 80 (HTTP) from 0.0.0.0/0
+**Backend-SG** → Inbound: 5000 from ALB-SG, (Optional: 22 SSH from your IP)
+**RDS-SG** → Inbound: 5432 from Backend-SG
+
 ### Step 2: User Data Script
 
 ```bash
@@ -115,7 +121,7 @@ sudo systemctl status voting
 
 ### Step 1: Create S3 Bucket
 
-* Name: `my-voting-frontend-2tierapp`
+* Name: `my-voting-frontend-2tierapp`      (your prefered name)
 * Region: Same as backend
 * Disable **Block All Public Access**
 
@@ -188,3 +194,8 @@ frontend/css/style.css
 ## 📄 License
 
 This project is for **learning/demo purposes only** — not production-ready without security hardening.
+
+
+## Author
+👨‍💻 Saksham Singh  
+📧 [saksham26singh@gmail.com]  
