@@ -1,42 +1,42 @@
-# **2-Tier Voting App — AWS Deployment** 🚀
+# 🗳️ 2-Tier Voting App — AWS Deployment 🚀
 
 A cloud-hosted **Voting Application** deployed on **AWS** using a **2-Tier Architecture**:
 
-* **Frontend** → Static Website on **Amazon S3**
-* **Backend API** → Python Flask on **Amazon EC2** (private subnet)
-* **Database** → **Amazon RDS** PostgreSQL (private subnet)
-* **Load Balancing** → Application Load Balancer (**ALB**)
-* **Networking** → Custom **VPC** with public & private subnets
+* 🎨 **Frontend** → Static Website on **Amazon S3**
+* ⚙️ **Backend API** → Python Flask on **Amazon EC2** (private subnet)
+* 🗄️ **Database** → **Amazon RDS** PostgreSQL (private subnet)
+* 🔀 **Load Balancing** → Application Load Balancer (**ALB**)
+* 🌐 **Networking** → Custom **VPC** with public & private subnets
 
 ---
 
-## **📌 Architecture Overview**
+## 📌 Architecture Overview
 
 ```
 User → S3 Website (Frontend) → ALB → EC2 (Backend) → RDS (Postgres)
 ```
 
-### Architecture Diagram 🖼
+### 🖼️ Architecture Diagram
 
-![AWS 2-Tier Architecture](*I'll update it soon* )
-
----
-
-## **⚙️ Technologies Used**
-
-* **Amazon S3** — Static website hosting for frontend
-* **Amazon EC2** — Flask backend API server
-* **Amazon RDS** — PostgreSQL database
-* **AWS VPC** — Custom network with public/private subnets
-* **Application Load Balancer (ALB)** — Distributes traffic to backend
-* **Python (Flask, Gunicorn)** — Backend framework & WSGI server
-* **Flask-CORS** — Handles cross-origin requests between frontend & backend
+!\[AWS 2-Tier Architecture]\(*I'll update it soon* )
 
 ---
 
-## **1️⃣ Backend EC2 Setup**
+## ⚙️ Technologies Used
 
-### **Step 1: Launch EC2**
+* **Amazon S3** → Static website hosting for frontend
+* **Amazon EC2** → Flask backend API server
+* **Amazon RDS** → PostgreSQL database
+* **AWS VPC** → Custom network with public/private subnets
+* **Application Load Balancer (ALB)** → Distributes traffic to backend
+* **Python (Flask, Gunicorn)** → Backend framework & WSGI server
+* **Flask-CORS** → Handles cross-origin requests between frontend & backend
+
+---
+
+## 🔧 1️⃣ Backend EC2 Setup
+
+### Step 1: Launch EC2
 
 * **AMI:** Ubuntu 22.04
 * **Subnet:** Private (inside VPC)
@@ -45,8 +45,7 @@ User → S3 Website (Frontend) → ALB → EC2 (Backend) → RDS (Postgres)
 
 ---
 
-### **Step 2: User Data Script**
-
+### Step 2: User Data Script
 
 ```bash
 # Switch to Ubuntu user
@@ -73,7 +72,7 @@ deactivate
 # 6️⃣ Clone app repo (replace with your repo URL)
 cd /home/ubuntu
 if [ ! -d "app" ]; then
-    git clone https://github.com/apexsaksham/2-tier-app-.git app
+    git clone https://github.com/apexsaksham/2-tier-app.git app
 else
     cd app && git pull
 fi
@@ -90,7 +89,7 @@ After=network.target
 [Service]
 User=ubuntu
 WorkingDirectory=/home/ubuntu/app/backend
-Environment="DB_HOST=voting-db.cluster-c58eku2gy7at.ap-south-1.rds.amazonaws.com"  # RDS endpoint
+Environment="DB_HOST=(your-rds-endpoint)"  # RDS endpoint
 Environment="DB_NAME=postgres"   # DB name
 Environment="DB_USER=saksham"    # DB username
 Environment="DB_PASS=sakshamsingh"  # DB password
@@ -112,9 +111,9 @@ sudo systemctl status voting
 
 ---
 
-## **2️⃣ S3 Frontend Hosting**
+## 🌍 2️⃣ S3 Frontend Hosting
 
-### **Step 1: Create S3 Bucket**
+### Step 1: Create S3 Bucket
 
 * Name: `my-voting-frontend-2tierapp`
 * Region: Same as backend
@@ -122,26 +121,28 @@ sudo systemctl status voting
 
 ---
 
-### **Step 2: Upload Files**
+### Step 2: Upload Files
 
-*Upload*:
+📂 Upload:
 
 ```
+### for example:
+
 frontend/index.html
-frontend/result.html
+frontend/result.html          ()
 frontend/css/style.css
 ```
 
 ---
 
-### **Step 3: Enable Static Website Hosting**
+### Step 3: Enable Static Website Hosting
 
 * Index document: `index.html`
 * Note the **S3 Website URL**
 
 ---
 
-### **Step 4: Set Public Read Policy**
+### Step 4: Set Public Read Policy
 
 ```json
 {
@@ -152,7 +153,7 @@ frontend/css/style.css
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::tf-frontend-saksham-16*"
+      "Resource": "arn:aws:s3:::(your-bucket-name)*"
     }
   ]
 }
@@ -160,30 +161,30 @@ frontend/css/style.css
 
 ---
 
-### **Step 5: Update API Endpoint**
+### Step 5: Update API Endpoint
 
-Edit **`index.html`** and replace the API URL with your **ALB DNS name**.
+✏️ Edit **`index.html`** and replace the API URL with your **ALB DNS name**.
 
 ---
 
-## **3️⃣ Testing**
+## 🧪 3️⃣ Testing
 
-✅ Visit S3 Website URL → Loads frontend
-✅ Submit vote → Goes through ALB → EC2 → RDS
+✅ Visit **S3 Website URL** → Loads frontend
+✅ Submit vote → Goes through **ALB → EC2 → RDS**
 ✅ Check backend logs in **CloudWatch** (optional)
 
 ---
 
-## **4️⃣ Cleanup (Avoid Charges)**
+## 🧹 4️⃣ Cleanup (Avoid Charges)
 
-* Delete **S3 bucket**
-* Delete **RDS instance**
-* Delete **EC2 instance**
-* Delete **ALB**
-* Delete **VPC resources**
+* 🗑️ Delete **S3 bucket**
+* 🗑️ Delete **RDS instance**
+* 🗑️ Delete **EC2 instance**
+* 🗑️ Delete **ALB**
+* 🗑️ Delete **VPC resources**
 
 ---
 
-## **📄 License**
+## 📄 License
 
-This project is for learning/demo purposes only — not production-ready without security hardening.
+This project is for **learning/demo purposes only** — not production-ready without security hardening.
